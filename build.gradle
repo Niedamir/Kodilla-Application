@@ -1,9 +1,11 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.6.RELEASE'
 	id 'java'
+	id 'war'
 }
 
 apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
 
 group = 'com.crude'
 version = '0.0.1-SNAPSHOT'
@@ -24,4 +26,9 @@ dependencies {
 	//compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 	
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
+	//provideRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-tomcat
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.1.7.RELEASE'
+
 }
