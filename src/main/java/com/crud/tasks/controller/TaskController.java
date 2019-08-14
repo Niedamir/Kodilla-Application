@@ -22,7 +22,7 @@ public class TaskController {
 	public List<TaskDto> getTasks() {
 		return taskMapper.mapToTaskDtoList(service.getAllTasks());
 	}
-	@RequestMapping(method = RequestMethod.PATCH, value = "updateTask")
+	@RequestMapping(method = RequestMethod.PUT, value = "updateTask")
 	public TaskDto updateTask(TaskDto taskDto) {
 		return new TaskDto( 1L, "Edited test title", "Editet_test_content");
 	}
