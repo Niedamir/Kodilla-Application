@@ -32,13 +32,19 @@ public class TrelloClient {
 			.queryParam("fields", "name,id")
 			.queryParam("lists", "all")
 			.build().encode().toUri();
-		try {
-			TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
-			return Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
-		} catch (RestClientException e) {
-			LOGGER.error(e.getMessage(), e);
-			return new ArrayList<>();
+
+		TrelloBoardDto boardsResponse = restTemplate.getForObject(url, TrelloBoardDto.class);
+		if (boardsResponse != null) {
+			return Arrays.asList(boardsResponse);
 		}
+		return new ArrayList<>();
+//		try {
+//			TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
+//			return Arrays.asList(ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
+//		} catch (RestClientException e) {
+//			LOGGER.error(e.getMessage(), e);
+//			return new ArrayList<>();
+//		}
 	}
 
 	public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto) {
