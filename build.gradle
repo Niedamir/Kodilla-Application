@@ -12,22 +12,18 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
-	maven {
-
-		url "https://www.oracle.com/content/secure/maven/content"
-
-		credentials {
-			username = 'rafallewandowski09@gmail.com'
-			password = '*7742ab*'
-		}
-	}
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation('org.postgresql:postgresql')
+	// implementation('org.postgresql:postgresql')
+	//compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
+	compile('mysql:mysql-connector-java')
 	implementation 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	compile('io.springfox:springfox-swagger2:2.7.0') 
+	compile('io.springfox:springfox-swagger-ui:2.7.0')
+	compile('org.springframework.boot:spring-boot-starter-mail:1.5.7.RELEASE')
 }
