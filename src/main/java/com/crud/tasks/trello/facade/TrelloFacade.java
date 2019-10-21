@@ -20,7 +20,7 @@ public class TrelloFacade {
 	@Autowired
 	private TrelloValidator trelloValidator;
 
-	public List<TrelloBoard> fetchTrelloBoards() {
+	public List<TrelloBoardDto> fetchTrelloBoards() {
 		List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloService.fetchTrelloBoards());
 		List<TrelloBoard> filteredBoards = trelloValidator.validateTrelloBoards(trelloBoards);
 		return trelloMapper.mapToBoardsDto(filteredBoards);

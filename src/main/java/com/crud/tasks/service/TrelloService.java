@@ -9,7 +9,9 @@ import com.crud.tasks.trello.client.TrelloClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.smartcardio.Card;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.data.mapping.Alias.ofNullable;
 
@@ -29,11 +31,12 @@ public class TrelloService {
 
 	public CreatedTrelloCardDto createTrelloCard(final TrelloCardDto trelloCardDto) {
 		CreatedTrelloCardDto newCard = trelloClient.createNewCard(trelloCardDto);
-		ofNullable(newCard).isPresent(card -> emailService.send(new Mail(
+		Optional.ofNullable(newCard).ifPresent(
+			card -> emailService.send(new Mail(
 			adminConfig.getAdminMail(),
 			"",
 			SUBJECT,
-			"New Card: " + card.getName() + " has been created on Your Trello acoount")));
+			"New Card has been created on Your Trello acoount")));
 		return newCard;
 	}
 }
