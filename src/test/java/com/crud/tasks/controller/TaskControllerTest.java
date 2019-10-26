@@ -81,40 +81,4 @@ public class TaskControllerTest {
 			.andExpect( jsonPath("$.title", is("Test")))
 			.andExpect( jsonPath("$.content", is("Test Content")));
 	}
-	@Test
-	public void shouldGetTask() throws Exception {
-		//Given
-		List<TaskDto> taskList = new ArrayList<>();
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
-		taskList.add(taskDto);
-		when(taskController.getTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
-
-		Gson gson = new Gson();
-		String jsonContent = gson.toJson(taskDto);
-
-		//when & Then
-		mockMvc.perform(get("/v1/task/getTask")
-			.contentType(MediaType.APPLICATION_JSON)
-			.characterEncoding("UTF-8")
-			.content(jsonContent))
-			.andExpect( jsonPath("$[0].title", is("Test")))
-			.andExpect( jsonPath("$[0].content", is("Test Content")));
-	}
-	@Test
-	public void shouldDeleteTask() throws Exception {
-		//Given
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
-		when(taskController.getTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
-
-		Gson gson = new Gson();
-		String jsonContent = gson.toJson(taskDto);
-
-		//when & Then
-		mockMvc.perform(delete("/v1/task/deleteTask")
-			.contentType(MediaType.APPLICATION_JSON)
-			.characterEncoding("UTF-8")
-			.content(jsonContent))
-			.andExpect( jsonPath("$.title", is(nullValue())))
-			.andExpect( jsonPath("$.content", is(nullValue())));
-	}
 }
