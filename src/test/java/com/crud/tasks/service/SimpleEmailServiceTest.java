@@ -35,4 +35,52 @@ public class SimpleEmailServiceTest {
 		//Then
 		verify(javaMailSender, times(1)).send(mailMessage);
 	}
+	@Test
+	public void sendMultiply() {
+		//Given
+		Mail mail1 = new Mail ("test@test.com", "","Test", "Test Message");
+		Mail mail2 = new Mail ("test2@tes.com", "", "Test", "Test Message");
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(mail1.getMailTo());
+		mailMessage.setCc(mail1.getToCc());
+		mailMessage.setSubject(mail1.getSubject());
+		mailMessage.setText(mail1.getMessage());
+		mailMessage.setTo(mail2.getMailTo());
+		mailMessage.setCc(mail2.getToCc());
+		mailMessage.setSubject(mail2.getSubject());
+		mailMessage.setText(mail2.getMessage());
+		//When
+		simpleEmailService.send(mail1);
+		simpleEmailService.send(mail2);
+		//Then
+		verify(javaMailSender, times(1)).send(mailMessage);
+	}
+	@Test
+	public void sendCC() {
+		//Given
+		Mail mail = new Mail ("test@test.com", "CC@test.com","Test", "Test Message");
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(mail.getMailTo());
+		mailMessage.setCc(mail.getToCc());
+		mailMessage.setSubject(mail.getSubject());
+		mailMessage.setText(mail.getMessage());
+		//When
+		simpleEmailService.send(mail);
+		//Then
+		verify(javaMailSender, times(1)).send(mailMessage);
+	}
+	@Test
+	public void sendEmptyMail() {
+		//Given
+		Mail mail = new Mail ("test@test.com", " ",null, null);
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(mail.getMailTo());
+		mailMessage.setCc(mail.getToCc());
+		mailMessage.setSubject(mail.getSubject());
+		mailMessage.setText(mail.getMessage());
+		//When
+		simpleEmailService.send(mail);
+		//Then
+		verify(javaMailSender, times(1)).send(mailMessage);
+	}
 }

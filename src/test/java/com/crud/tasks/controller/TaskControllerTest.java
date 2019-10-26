@@ -32,7 +32,7 @@ public class TaskControllerTest {
 	private TaskController taskController;
 
 	@Test
-	public void shouldFetchTasksList() throws Exception {
+	public void getTasks() throws Exception {
 		//Given
 		List<TaskDto> taskList = new ArrayList<>();
 		taskList.add(new TaskDto("1", "Test Task", "Test Content"));
@@ -46,7 +46,7 @@ public class TaskControllerTest {
 			.andExpect(jsonPath("$[0].content", is("Test Content")));
 	}
 	@Test
-	public void shouldCreateTask() throws Exception {
+	public void createTask() throws Exception {
 		//Given
 		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
 		when(taskController.createTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
@@ -64,7 +64,7 @@ public class TaskControllerTest {
 			.andExpect( jsonPath("$.content", is("Test Content")));
 	}
 	@Test
-	public void shouldUpdateTask() throws Exception {
+	public void updateTask() throws Exception {
 		//Given
 		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
 		when(taskController.updateTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
@@ -80,5 +80,41 @@ public class TaskControllerTest {
 			.andExpect( jsonPath("$.id", is("1")))
 			.andExpect( jsonPath("$.title", is("Test")))
 			.andExpect( jsonPath("$.content", is("Test Content")));
+	}
+	@Test
+	public void shouldGetTask() throws Exception {
+		//Given
+		List<TaskDto> taskList = new ArrayList<>();
+		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
+		taskList.add(taskDto);
+		when(taskController.getTask(ArgumentMatchers.anyLong())).thenReturn(taskDto);
+
+		Gson gson = new Gson();
+		String jsonContent = gson.toJson(taskDto);
+
+		//when & Then
+		mockMvc.perform(get("/v1/task/getTask")
+			.contentType(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8")
+			.content(jsonContent))
+			.andExpect(jsonPath("$.title", is("Test")))
+			.andExpect(jsonPath("$.content", is("Test Content")));
+	}
+	@Test
+	public void shouldDeleteTask() throws Exception {
+		//Given
+		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
+		when(taskController.getTask(ArgumentMatchers.anyLong())).thenReturn(taskDto);
+
+		Gson gson = new Gson();
+		String jsonContent = gson.toJson(taskDto);
+
+		//when & Then
+		mockMvc.perform(delete("/v1/task/deleteTask")
+			.contentType(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8")
+			.content(jsonContent))
+			.andExpect( jsonPath("$.title", is(nullValue())))
+			.andExpect( jsonPath("$.content", is(nullValue())));
 	}
 }
