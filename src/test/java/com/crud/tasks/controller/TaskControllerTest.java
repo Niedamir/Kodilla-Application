@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +34,10 @@ public class TaskControllerTest {
 	private TaskController taskController;
 
 	@Test
-	public void getTasks() throws Exception {
+	public void shouldGetTasks() throws Exception {
 		//Given
 		List<TaskDto> taskList = new ArrayList<>();
-		taskList.add(new TaskDto("1", "Test Task", "Test Content"));
+		taskList.add(new TaskDto(new Long(1), "Test Task", "Test Content"));
 		when(taskController.getTasks()).thenReturn(taskList);
 		//when & Then
 		mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
@@ -46,27 +48,9 @@ public class TaskControllerTest {
 			.andExpect(jsonPath("$[0].content", is("Test Content")));
 	}
 	@Test
-	public void createTask() throws Exception {
+	public void shouldUpdateTask() throws Exception {
 		//Given
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
-		when(taskController.createTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
-
-		Gson gson = new Gson();
-		String jsonContent = gson.toJson(taskDto);
-
-		//when & Then
-		mockMvc.perform(post("/v1/task/createTask")
-			.contentType(MediaType.APPLICATION_JSON)
-			.characterEncoding("UTF-8")
-			.content(jsonContent))
-			.andExpect( jsonPath("$.id", is("1")))
-			.andExpect( jsonPath("$.title", is("Test")))
-			.andExpect( jsonPath("$.content", is("Test Content")));
-	}
-	@Test
-	public void updateTask() throws Exception {
-		//Given
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
+		TaskDto taskDto = new TaskDto(new Long(1), "Test", "Test Content");
 		when(taskController.updateTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
 
 		Gson gson = new Gson();
@@ -77,23 +61,43 @@ public class TaskControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8")
 			.content(jsonContent))
-			.andExpect( jsonPath("$.id", is("1")))
+			.andExpect( jsonPath("$.id", is(1)))
 			.andExpect( jsonPath("$.title", is("Test")))
 			.andExpect( jsonPath("$.content", is("Test Content")));
 	}
 	@Test
-	public void shouldGetTask() throws Exception {
+	public void shouldCreateTask() throws Exception {
 		//Given
-		List<TaskDto> taskList = new ArrayList<>();
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
-		taskList.add(taskDto);
-		when(taskController.getTask(ArgumentMatchers.anyLong())).thenReturn(taskDto);
+		TaskDto taskDto = new TaskDto(new Long(1), "Test", "Test Content");
+		when(taskController.createTask(ArgumentMatchers.any(TaskDto.class))).thenReturn(taskDto);
 
 		Gson gson = new Gson();
 		String jsonContent = gson.toJson(taskDto);
 
 		//when & Then
-		mockMvc.perform(get("/v1/task/getTask")
+		mockMvc.perform(post("/v1/task/createTask")
+			.contentType(MediaType.APPLICATION_JSON)
+			.characterEncoding("UTF-8")
+			.content(jsonContent))
+			.andExpect( jsonPath("$.id", is(1)))
+			.andExpect( jsonPath("$.title", is("Test")))
+			.andExpect( jsonPath("$.content", is("Test Content")));
+	}
+
+	@Test
+	public void shouldGetTask() throws Exception {
+		//Given
+		List<TaskDto> taskList = new ArrayList<>();
+		TaskDto taskDto = new TaskDto(new Long(1), "Test", "Test Content");
+		taskList.add(taskDto);
+		Long id = new Long(1);
+		when(taskController.getTask(id)).thenReturn(taskDto);
+
+		Gson gson = new Gson();
+		String jsonContent = gson.toJson(taskDto);
+
+		//when & Then
+		mockMvc.perform(get("/v1/task/getTask?id=1").param("id", "id")
 			.contentType(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8")
 			.content(jsonContent))
@@ -103,18 +107,18 @@ public class TaskControllerTest {
 	@Test
 	public void shouldDeleteTask() throws Exception {
 		//Given
-		TaskDto taskDto = new TaskDto("1", "Test", "Test Content");
-		when(taskController.getTask(ArgumentMatchers.anyLong())).thenReturn(taskDto);
+		TaskDto taskDto = new TaskDto(new Long(1), "Test", "Test Content");
+		Long id = new Long(1);
+		taskController.createTask(taskDto);
 
 		Gson gson = new Gson();
 		String jsonContent = gson.toJson(taskDto);
 
 		//when & Then
-		mockMvc.perform(delete("/v1/task/deleteTask")
+		mockMvc.perform(delete("/v1/task/deleteTask?id=1").param("id", "id")
 			.contentType(MediaType.APPLICATION_JSON)
 			.characterEncoding("UTF-8")
 			.content(jsonContent))
-			.andExpect( jsonPath("$.title", is(nullValue())))
-			.andExpect( jsonPath("$.content", is(nullValue())));
+			.andExpect(status().isOk());
 	}
 }
