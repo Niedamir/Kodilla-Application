@@ -29,6 +29,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/junit/junit
 //	testCompile group: 'junit', name: 'junit', version: '4.12'
 	testCompile 'junit:junit:4.12'
+	compile('org.springframework.boot:spring-boot-starter-actuator')
 
 	compile('com.google.code.gson:gson:2.8.2')
 }
