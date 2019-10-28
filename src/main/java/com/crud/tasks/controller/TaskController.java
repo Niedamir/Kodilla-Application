@@ -24,9 +24,10 @@ public class TaskController {
 		return taskMapper.mapToTaskDtoList(service.getAllTasks());
 	}
 
-	@RequestMapping(method = RequestMethod.PUT, value = "/updateTask")
+	@RequestMapping(method = RequestMethod.PUT, value = "/updateTask", consumes = APPLICATION_JSON_VALUE)
 	public TaskDto updateTask(TaskDto taskDto) {
-		return new TaskDto( new Long(2), "Edited test title", "Editet_test_content");
+		service.saveTask(taskMapper.mapToTask(taskDto));
+		return taskDto;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/createTask", consumes = APPLICATION_JSON_VALUE)
